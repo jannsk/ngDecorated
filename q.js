@@ -6,6 +6,7 @@ angular.module('ngDecoratedQ', []).config(function($provide) {
     // Extend promises with non-returning handlers
     function decoratePromise(promise) {
       promise._then = promise.then;
+      var timeoutId;
 
       promise.then = function(thenFn, errFn, notifyFn) {
         return decoratePromise(promise._then(thenFn, errFn, notifyFn));
@@ -38,16 +39,14 @@ angular.module('ngDecoratedQ', []).config(function($provide) {
 
       // TODO
 
-      // promise.timeoutAndReject = function(ms) {
-      //   timeoutAndReject = $timeout(function() {
-      //     promise.reject('Timed out');
-      //   }, ms);
-      //   var cancelTimeout = function() {
-      //     timeoutAndReject.cancel();
-      //   };
-      //   promise.then(cancelTimeout, cancelTimeout);
-      //   return promise;
-      // };
+      promise.timeout = function(ms, fn) {
+        timeoutId = setTimeout(function() {
+          fn();
+        }, ms);
+        return promise.finally(function() {
+          clearTimeout(timeoutId);
+        });
+      };
 
       // promise.timeout = function(ms, fn) {
       //   timeout = $timeout(function() {

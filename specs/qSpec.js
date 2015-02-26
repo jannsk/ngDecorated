@@ -7,7 +7,11 @@ describe('decoratedQ', function() {
   beforeEach(inject(function($q, $rootScope) {
       service = $q;
       scope = $rootScope;
+      jasmine.clock().install();
   }));
+  afterEach(function() {
+    jasmine.clock().uninstall();
+  });
 
   describe('should not break default functionality', function() {
 
@@ -253,4 +257,40 @@ describe('decoratedQ', function() {
     });
   });
 
+  describe('#timeout', function() {
+    it('resolved/rejected before timeout', function() {
+      scope.called = false;
+      var p = service.defer();
+      p.promise.timeout(10, function() {
+        scope.called = true;
+      });
+
+      jasmine.clock().tick(9);
+      scope.$digest();
+      expect(scope.called).toBe(false);
+
+      p.reject();
+      scope.$digest();
+      expect(scope.called).toBe(false);
+    });
+    it('resolved/rejected after timeout', function() {
+      scope.called = false;
+      scope.finally = false;
+      var p = service.defer();
+      p.promise.timeout(10, function() {
+        scope.called = true;
+      }).finally(function() {
+        scope.finally = true;
+      });
+
+      jasmine.clock().tick(10);
+      expect(scope.called).toBe(true);
+      expect(scope.finally).toBe(false);
+
+      p.resolve();
+      scope.$digest();
+      expect(scope.called).toBe(true);
+      expect(scope.finally).toBe(true);
+    });
+  });
 });
