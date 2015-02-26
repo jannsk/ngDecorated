@@ -1,0 +1,12 @@
+language: node_js
+
+node_js:
+  - '0.10'
+
+before_script:
+  - npm install -g bower
+  - npm install phantomjs
+  - npm install -g karma
+  - bower install
+
+script: 'karma start --no-auto-watch --single-run'
