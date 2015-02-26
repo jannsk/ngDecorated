@@ -293,4 +293,80 @@ describe('decoratedQ', function() {
       expect(scope.finally).toBe(true);
     });
   });
+
+  describe('#timeoutAndReject', function() {
+    describe('before timeout', function() {
+      it('resolved', function() {
+        scope.success = false;
+        scope.error = false;
+        var p = service.defer();
+        p.promise.timeoutAndReject(10).then(function() {
+          scope.success = true;
+        }, function() {
+          scope.error= true;
+        });
+
+        jasmine.clock().tick(9);
+        scope.$digest();
+        expect(scope.success).toBe(false);
+        expect(scope.error).toBe(false);
+
+        p.resolve();
+        scope.$digest();
+        expect(scope.success).toBe(true);
+        expect(scope.error).toBe(false);
+
+        jasmine.clock().tick(1);
+        scope.$digest();
+        expect(scope.success).toBe(true);
+        expect(scope.error).toBe(false);
+      });
+      it('rejected', function() {
+        scope.success = false;
+        scope.error = false;
+        var p = service.defer();
+        p.promise.timeoutAndReject(10).then(function() {
+          scope.success = true;
+        }, function() {
+          scope.error= true;
+        });
+
+        jasmine.clock().tick(5);
+        scope.$digest();
+        expect(scope.success).toBe(false);
+        expect(scope.error).toBe(false);
+
+        p.reject();
+        scope.$digest();
+        expect(scope.success).toBe(false);
+        expect(scope.error).toBe(true);
+
+        jasmine.clock().tick(5);
+        scope.$digest();
+        expect(scope.success).toBe(false);
+        expect(scope.error).toBe(true);
+      });
+    });
+    it('after timeout resolved/rejected', function() {
+      scope.success = false;
+      scope.error = false;
+      var p = service.defer();
+      p.promise.timeoutAndReject(10).then(function() {
+        scope.success = true;
+      }, function() {
+        scope.error= true;
+      });
+
+      jasmine.clock().tick(10);
+      scope.$digest();
+      expect(scope.success).toBe(false);
+      expect(scope.error).toBe(true);
+
+      p.resolve();
+      scope.$digest();
+      expect(scope.success).toBe(false);
+      expect(scope.error).toBe(true);
+    });
+  });
+
 });

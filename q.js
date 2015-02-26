@@ -7,6 +7,7 @@ angular.module('ngDecoratedQ', []).config(function($provide) {
     function decoratePromise(promise) {
       promise._then = promise.then;
       var timeoutId;
+      var timeoutAndRejectID;
 
       promise.then = function(thenFn, errFn, notifyFn) {
         return decoratePromise(promise._then(thenFn, errFn, notifyFn));
@@ -37,8 +38,6 @@ angular.module('ngDecoratedQ', []).config(function($provide) {
         });
       };
 
-      // TODO
-
       promise.timeout = function(ms, fn) {
         timeoutId = setTimeout(function() {
           fn();
@@ -48,16 +47,21 @@ angular.module('ngDecoratedQ', []).config(function($provide) {
         });
       };
 
-      // promise.timeout = function(ms, fn) {
-      //   timeout = $timeout(function() {
-      //     fn();
-      //   }, ms);
-      //   var cancelTimeout = function() {
-      //     timeout.cancel();
-      //   };
-      //   promise.then(cancelTimeout, cancelTimeout);
-      //   return promise;
-      // };
+      promise.timeoutAndReject = function(ms) {
+        var deferred = $delegate.defer();
+        timeoutAndRejectID = setTimeout(function() {
+          deferred.reject('Timed out');
+        }, ms);
+        promise.finally(function() {
+          clearTimeout(timeoutAndRejectID);
+        });
+        promise.then(function(data) {
+          deferred.resolve(data);
+        }, function(data) {
+          deferred.reject(data);
+        });
+        return deferred.promise;
+      };
 
       return promise;
     }
