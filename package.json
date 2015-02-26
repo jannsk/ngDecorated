@@ -17,7 +17,7 @@
     "karma-phantomjs-launcher": "^0.1.4"
   },
   "scripts": {
-    "test": "karma start --no-auto-watch --single-run"
+    "test": "karma start --single-run --no-auto-watch"
   },
   "author": "jannsk",
   "license": "ISC"
