@@ -1,0 +1,24 @@
+{
+  "name": "ngDecoratedServices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "q.js",
+  "dependencies": {
+    "bower": "^1.3.12",
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4"
+  },
+  "devDependencies": {
+    "karma": "^0.12.31",
+    "karma-jasmine": "^0.3.5",
+    "karma-notify-reporter": "^0.1.1",
+    "karma-phantomjs-launcher": "^0.1.4"
+  },
+  "scripts": {
+    "test": "karma start --no-auto-watch --single-run"
+  },
+  "author": "jannsk",
+  "license": "ISC"
+}

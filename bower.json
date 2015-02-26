@@ -1,0 +1,18 @@
+{
+  "name": "decoratedServices",
+  "version": "1.0.0",
+  "authors": [
+    "jannsk"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "specs"
+  ],
+  "dependencies": {
+    "angular": "~1.3.14"
+  }
+}
