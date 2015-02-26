@@ -13,6 +13,7 @@
     "specs"
   ],
   "dependencies": {
-    "angular": "~1.3.14"
+    "angular": "~1.3.14",
+    "angular-mocks": "~1.3.14"
   }
 }
